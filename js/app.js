@@ -2,7 +2,7 @@ import { WebGLPipeline } from './webgl.js';
 import { CubeParser } from './parser.js';
 import { ExifStitcher } from './exif.js';
 
-const IS_PRODUCTION = false;
+const IS_PRODUCTION = true;
 const LUT_BASE_URL = IS_PRODUCTION ? 'https://raw.githubusercontent.com/YahiaAngelo/Film-Luts/main/' : '../resources/Film-Luts/';
 
 class FrameAlchApp {
