@@ -1,0 +1,24 @@
+# Dependencies and Local Resources
+/resources/
+node_modules/
+
+# AI Instruction Files
+rawcode.md
+gemini.md
+claude.md
+
+# OS and Editor Specific Files
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Python Cache Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

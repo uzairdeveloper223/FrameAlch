@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Professional client-side film simulation and image processing workstation in the browser. Frame Alchemy: premium edge sharpness, bilateral noise reduction, LMS white balance, and trilinear 3D LUT grading.">
+  <meta name="theme-color" content="#0b0f19">
+  <title>FrameAlch — Professional Client-Side Image Science Workstation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+  <div id="app" class="app-layout">
+    <header class="app-header">
+      <div class="brand-group">
+        <div class="logo-wrapper">
+          <svg viewBox="0 0 32 32" class="logo-icon">
+            <path d="M16 4 L28 24 A 2 2 0 0 1 26 27 L 6 27 A 2 2 0 0 1 4 24 Z" fill="none" stroke="var(--accent-amber)"
+              stroke-width="2.5" stroke-linejoin="round" />
+            <circle cx="16" cy="15" r="3.5" fill="var(--accent-emerald)" />
+          </svg>
+          <h1 class="brand-title">Frame<span>Alch</span></h1>
+        </div>
+        <p class="brand-tagline">Turn any shot into a pro capture — no upload, no server, no BS.</p>
+      </div>
+      <div class="action-group">
+        <label for="image-upload" class="action-btn upload-btn" id="upload-label">
+          <svg viewBox="0 0 24 24" class="btn-icon">
+            <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+          </svg>
+          Load Image
+        </label>
+        <input type="file" id="image-upload" accept="image/*" class="visually-hidden" multiple>
+        <button id="camera-btn" class="action-btn batch-btn">
+          <svg viewBox="0 0 24 24" class="btn-icon">
+            <path
+              d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
+          </svg>
+          Camera
+        </button>
+        <button id="adjust-toggle-btn" class="action-btn batch-btn mobile-only-btn">
+          <svg viewBox="0 0 24 24" class="btn-icon">
+            <path
+              d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2h14V9H7zm10 4v-2H3v2h14zm-6-4V7H3v2h8z" />
+          </svg>
+          Adjust
+        </button>
+        <button id="batch-toggle-btn" class="action-btn batch-btn">
+          <svg viewBox="0 0 24 24" class="btn-icon">
+            <path
+              d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
+          </svg>
+          Queue (<span id="batch-count">0</span>)
+        </button>
+        <button id="export-btn" class="action-btn export-btn" disabled>
+          <svg viewBox="0 0 24 24" class="btn-icon">
+            <path
+              d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" />
+          </svg>
+          Export Capture
+        </button>
+        <a href="https://github.com/uzairdeveloper223/FrameAlch" target="_blank" class="action-btn github-btn"
+          title="GitHub Repository">
+          <svg viewBox="0 0 24 24" class="btn-icon" fill="currentColor">
+            <path
+              d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z" />
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="viewport-section" id="viewport-container">
+        <div class="viewport-wrapper" id="viewport-wrapper">
+          <div class="canvas-container" id="canvas-container">
+            <img id="original-view" class="split-view-image" src="" alt="Original View">
+            <div id="processed-wrapper" class="processed-wrapper">
+              <canvas id="gl-canvas"></canvas>
+            </div>
+            <div id="split-slider" class="split-slider">
+              <div class="split-handle">
+                <svg viewBox="0 0 24 24" class="handle-icon">
+                  <path d="M8 7l-5 5 5 5V7zm8 0v10l5-5-5-5z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="viewport-fallback" id="viewport-fallback">
+            <div class="fallback-content">
+              <svg viewBox="0 0 24 24" class="fallback-icon">
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z" />
+              </svg>
+              <p class="fallback-primary">Drag & Drop Image Here</p>
+              <p class="fallback-secondary">Supports RAW previews, JPEG, PNG, WebP up to 48MP</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar-section" id="sidebar-section">
+        <div class="sidebar-scroll">
+          <div class="sidebar-header">
+            <h2 class="sidebar-title">Adjustments</h2>
+            <button id="reset-all-btn" class="reset-all-btn">
+              <svg viewBox="0 0 24 24" class="reset-icon">
+                <path
+                  d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+              </svg>
+              Reset All
+            </button>
+            <button id="close-adjust-btn" class="close-adjust-btn">&times;</button>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">White Balance</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="temp-slider">Temperature</label>
+                <span id="temp-val" class="val-badge">As Shot</span>
+              </div>
+              <input type="range" id="temp-slider" min="-1" max="1" step="0.01" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="tint-slider">Tint</label>
+                <span id="tint-val" class="val-badge">As Shot</span>
+              </div>
+              <input type="range" id="tint-slider" min="-1" max="1" step="0.01" value="0">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">ISP Curve Corrections</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="shadows-slider">Shadows Recovery</label>
+                <span id="shadows-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="shadows-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="highlights-slider">Highlights Recovery</label>
+                <span id="highlights-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="highlights-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">Details (Demosaic / Sharpness)</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="denoise-slider">Bilateral Noise Reduction</label>
+                <span id="denoise-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="denoise-slider" min="0" max="1" step="0.02" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="sharpen-slider">Deconvolution Sharpness</label>
+                <span id="sharpen-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="sharpen-slider" min="0" max="5" step="0.1" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="clarity-slider">Local Contrast Clarity</label>
+                <span id="clarity-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="clarity-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">Exposure & Tone Map</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="exposure-slider">Exposure Bias</label>
+                <span id="exposure-val" class="val-badge">0.00 EV</span>
+              </div>
+              <input type="range" id="exposure-slider" min="-3" max="3" step="0.05" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="contrast-slider">Contrast</label>
+                <span id="contrast-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="contrast-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="saturation-slider">Saturation</label>
+                <span id="saturation-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="saturation-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="vibrance-slider">Vibrance</label>
+                <span id="vibrance-val" class="val-badge">0%</span>
+              </div>
+              <input type="range" id="vibrance-slider" min="-1" max="1" step="0.02" value="0">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">Vintage Film Effects</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="grain-slider">Organic Film Grain</label>
+                <span id="grain-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="grain-slider" min="0" max="1.5" step="0.05" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="vignette-slider">Lens Vignette</label>
+                <span id="vignette-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="vignette-slider" min="0" max="1.5" step="0.05" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="chromatic-aberration-slider">Chromatic Aberration</label>
+                <span id="chromatic-aberration-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="chromatic-aberration-slider" min="0" max="1.5" step="0.05" value="0">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="vintage-slider">Vintage Tone Fade</label>
+                <span id="vintage-val" class="val-badge">Off</span>
+              </div>
+              <input type="range" id="vintage-slider" min="0" max="1" step="0.02" value="0">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h2 class="group-title">3D LUT Grading</h2>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label for="lut-intensity-slider">LUT Intensity</label>
+                <span id="lut-intensity-val" class="val-badge">100%</span>
+              </div>
+              <input type="range" id="lut-intensity-slider" min="0" max="1" step="0.02" value="1">
+            </div>
+            <div style="margin-top: 10px; margin-bottom: 14px;">
+              <label class="checkbox-container">
+                <input type="checkbox" id="lut-log-mode">
+                <span class="checkbox-label">Log Space Input (Convert to Cineon Log)</span>
+              </label>
+            </div>
+            <div class="lut-info-panel">
+              <p class="lut-info-label">Active Preset</p>
+              <p id="lut-info-name" class="lut-info-value">Linear (No Grading)</p>
+            </div>
+          </div>
+          <div class="sidebar-footer">
+            <p>Crafted by <a href="https://uzair.is-a.dev" target="_blank">Uzair Mughal</a></p>
+            <p><a href="#" id="privacy-policy-link">Privacy & Terms</a></p>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="app-footer" id="app-footer">
+      <div class="footer-resize-handle" id="footer-resize-handle">
+        <div class="resize-grip"></div>
+      </div>
+      <div class="presets-container">
+        <div class="category-tabs" id="category-tabs"></div>
+        <div class="presets-gallery-wrapper">
+          <div class="presets-gallery" id="presets-gallery">
+            <div class="preset-card active" id="preset-linear" data-lut-file="linear">
+              <div class="preset-thumbnail-placeholder">
+                <svg viewBox="0 0 15 15" fill="none" class="preset-thumb-icon" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7.49991 0.877075C3.84222 0.877075 0.877075 3.84222 0.877075 7.49991C0.877075 11.1576 3.84222 14.1227 7.49991 14.1227C11.1576 14.1227 14.1227 11.1576 14.1227 7.49991C14.1227 3.84222 11.1576 0.877075 7.49991 0.877075ZM3.85768 3.15057C4.84311 2.32448 6.11342 1.82708 7.49991 1.82708C10.6329 1.82708 13.1727 4.36689 13.1727 7.49991C13.1727 8.88638 12.6753 10.1567 11.8492 11.1421L3.85768 3.15057ZM3.15057 3.85768C2.32448 4.84311 1.82708 6.11342 1.82708 7.49991C1.82708 10.6329 4.36689 13.1727 7.49991 13.1727C8.88638 13.1727 10.1567 12.6753 11.1421 11.8492L3.15057 3.85768Z"
+                    fill="currentColor" />
+                </svg>
+              </div>
+              <div class="preset-info">
+                <p class="preset-name">None</p>
+                <p class="preset-cat">No Grading</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Left Sliding Batch Queue Drawer -->
+    <div class="batch-drawer" id="batch-drawer">
+      <div class="drawer-header">
+        <h3>Batch Processing Queue</h3>
+        <button id="close-drawer-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="batch-list" id="batch-list"></div>
+      <div class="drawer-footer">
+        <button id="batch-export-btn" class="action-btn batch-export-btn" disabled>Export Entire Queue</button>
+        <button id="clear-queue-btn" class="action-btn clear-btn">Clear All</button>
+      </div>
+    </div>
+
+    <!-- Live Camera Capture Modal -->
+    <div id="camera-modal" class="modal-overlay">
+      <div class="modal-content camera-modal-content">
+        <div class="modal-header">
+          <h3>Live Capture</h3>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button id="switch-camera-btn" class="action-btn"
+              style="padding: 6px 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">
+              <svg viewBox="0 0 24 24" class="btn-icon" style="width: 20px; height: 20px;">
+                <path
+                  d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z" />
+              </svg>
+            </button>
+            <button id="close-camera-btn" class="close-btn">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="camera-stream-wrapper">
+            <video id="camera-video" autoplay playsinline muted></video>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="shutter-btn" class="action-btn export-btn shutter-btn">
+            <svg viewBox="0 0 24 24" class="btn-icon">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+            </svg>
+            Capture Frame
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Options Modal -->
+    <div id="export-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Export Custom Settings</h3>
+          <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="dialog-row">
+            <label for="export-filename">Filename Prefix</label>
+            <input type="text" id="export-filename" value="framealch_capture">
+          </div>
+          <div class="dialog-row">
+            <label for="export-format">Export Format</label>
+            <select id="export-format">
+              <option value="image/jpeg">JPEG (High Compatibility)</option>
+              <option value="image/png">PNG (Lossless Quality)</option>
+            </select>
+          </div>
+          <div class="dialog-row" id="quality-row">
+            <div class="slider-header">
+              <label for="export-quality">JPEG Compression Quality</label>
+              <span id="export-quality-val" class="val-badge">95%</span>
+            </div>
+            <input type="range" id="export-quality" min="10" max="100" step="1" value="95">
+          </div>
+          <div class="dialog-row">
+            <label for="export-scale">Export Dimension Scale</label>
+            <select id="export-scale">
+              <option value="1.0">100% (Pristine Full Resolution)</option>
+              <option value="0.75">75% (Medium HD Resolution)</option>
+              <option value="0.5">50% (Standard HD Resolution)</option>
+              <option value="0.25">25% (Fast Web Preview)</option>
+            </select>
+          </div>
+          <div class="dialog-row" id="exif-row">
+            <label class="checkbox-container">
+              <input type="checkbox" id="export-exif" checked>
+              <span class="checkbox-label">Stitch Original EXIF Metadata</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="confirm-export-btn" class="action-btn export-btn">Process & Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Camera Capture Modal -->
+    <div id="camera-modal" class="modal-overlay">
+      <div class="modal-content camera-modal-content">
+        <div class="modal-header">
+          <h3>Live Capture</h3>
+          <button id="close-camera-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="camera-stream-wrapper">
+            <video id="camera-video" autoplay playsinline muted></video>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="shutter-btn" class="action-btn export-btn shutter-btn">
+            <svg viewBox="0 0 24 24" class="btn-icon">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+            </svg>
+            Capture Frame
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- First-time Privacy Consent Banner -->
+    <div id="privacy-banner" class="privacy-banner hidden">
+      <div class="privacy-banner-content">
+        <svg viewBox="0 0 24 24" class="privacy-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+            fill="currentColor" />
+        </svg>
+        <p class="privacy-text">
+          FrameAlch respects your privacy: all image processing and camera feeds run 100% locally in your browser. No
+          data is ever uploaded. Read our <a href="#" id="banner-privacy-link">Privacy Policy</a> to learn more.
+        </p>
+        <button id="accept-privacy-btn" class="action-btn accept-privacy-btn">Acknowledge</button>
+      </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="modal-overlay">
+      <div class="modal-content privacy-modal-content">
+        <div class="modal-header">
+          <h3>Privacy & Data Policy</h3>
+          <button id="close-privacy-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body markdown-content">
+          <h4>100% Client-Side Processing Guarantee</h4>
+          <p>FrameAlch operates strictly inside your web browser using HTML5 and WebGL2. We stand by the absolute
+            privacy of your creative works:</p>
+          <ul>
+            <li><strong>No Cloud Servers:</strong> No image, photo, camera frame, or file metadata is ever
+              transmitted, uploaded, or saved to any remote servers.</li>
+            <li><strong>Local Sandbox:</strong> Your files are processed dynamically using GPU textures in your RAM,
+              existing solely within the browser tab's active session memory.</li>
+            <li><strong>Camera Privacy:</strong> Real-time frame previews use direct local hardware device feeds and
+              are never intercepted or logged.</li>
+            <li><strong>No Tracking:</strong> FrameAlch does not employ cookies, analytics trackers, or user profiling
+              tools.</li>
+          </ul>
+          <p>By using FrameAlch, you retain full ownership and absolute confidentiality of all your digital media
+            assets.</p>
+        </div>
+        <div class="modal-footer">
+          <button id="confirm-privacy-btn" class="action-btn export-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
